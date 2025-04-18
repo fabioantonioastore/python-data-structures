@@ -1,16 +1,18 @@
 from typing import Any
 from collections.abc import Iterable
-from wsgiref.util import request_uri
 
 from data_structures import Node
 
 
 class Stack(Iterable):
-    def __init__(self) -> None:
+    def __init__(self, *args) -> None:
         self.__head = None
         self.__tail = None
         self.__iter_stack = None
         self.__size = 0
+
+        for arg in args:
+            self.push(arg)
 
     @property
     def head(self) -> Any:
