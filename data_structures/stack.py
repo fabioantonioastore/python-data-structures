@@ -67,47 +67,89 @@ class Stack(Iterable):
             node = node.next
         return items
 
-    def remove(self) -> Any:
-        pass
+    def remove(self, item: Any) -> Any:
+        node = self.__head
+        while not node is None:
+            if node.data == item:
+                data = node.data
+                self.__size -= 1
+                if self.__head is node and self.__head is self.__tail:
+                    self.__head = None
+                    self.__tail = None
+                    return data
+                if self.__head is node:
+                    self.__head = self.__head.next
+                    self.__head.prev = None
+                    return data
+                if self.__tail is node:
+                    self.__tail = self.__tail.prev
+                    self.__tail.next = None
+                    return data
+                node.prev.next = node.next
+                node.next.prev = node.prev
+                return data
+            node = node.next
 
-    def insert(self) -> None:
-        pass
+    def insert(self, index: int, item: Any) -> None:
+        if len(self) == 0:
+            self.push(item)
+            return
+        if index < 0:
+            index += len(self)
+        node = Node(item)
+        self.__size += 1
+        if index > len(self) - 2 or abs(index + 1) > len(self) - 2:
+            node.prev = self.__tail
+            self.__tail.next = node
+            self.__tail = node
+            return
+
+        node_insert = self.__head
+        while index >= 0:
+            if index == 0:
+                if node_insert is self.__head:
+                    node.next = self.__head
+                    self.__head.prev = node
+                    self.__head = node
+                    return
+                if node_insert is self.__tail:
+                    node.next = self.__tail
+                    node.prev = self.__tail.prev
+                    self.__tail.prev.next = node
+                    self.__tail.prev = node
+                    return
+                node.next = node_insert
+                node.prev = node_insert.prev
+                node_insert.prev.next = node
+                node_insert.prev = node
+                return
+            node_insert = node_insert.next
+            index -= 1
 
     def __getitem__(self, index: int) -> Any:
         try:
-            if index >= 0:
-                node = self.__head
-                while index >= 0:
-                    if index == 0:
-                        return node.data
-                    node = node.next
-                    index -= 1
-            node = self.__tail
-            while index < 0:
-                if index == -1:
+            if index < 0:
+                index += len(self)
+            node = self.__head
+            while index >= 0:
+                if index == 0:
                     return node.data
-                node = node.prev
-                index += 1
+                node = node.next
+                index -= 1
         except Exception:
             raise IndexError("Index overflow")
 
     def __setitem__(self, index, data) -> None:
         try:
-            if index >= 0:
-                node = self.__head
-                while index >= 0:
-                    if index == 0:
-                        node.data = data
-                        return
-                    node = node.next
-                    index -= 1
-            node = self.__tail
-            while index < 0:
-                if index == -1:
+            if index < 0:
+                index += len(self)
+            node = self.__head
+            while index >= 0:
+                if index == 0:
                     node.data = data
                     return
-                node = node.prev
-                index += 1
+                node = node.next
+                index -= 1
         except Exception:
             raise IndexError("Index overflow")
 
