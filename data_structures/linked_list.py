@@ -27,6 +27,41 @@ class LinkedList(Iterable):
     def tail(self) -> Any:
         return self.__tail
 
+    @head.setter
+    def head(self, value: Any) -> None:
+        if self.__head:
+            self.__head.data = value
+            return
+        raise "The list is empty"
+
+    @tail.setter
+    def tail(self, value: Any) -> None:
+        if self.__tail:
+            self.__tail.data = value
+        raise "The list is empty"
+
+    @property
+    def head_node(self) -> Node:
+        return self.__head
+
+    @head_node.setter
+    def head_node(self, node: Node) -> None:
+        if isinstance(node, Node) or node is None:
+            self.__head = node
+            return
+        raise "Invalid value"
+
+    @property
+    def tail_node(self) -> Node:
+        return self.__tail
+
+    @tail_node.setter
+    def tail_node(self, node: Node) -> None:
+        if isinstance(node, Node) or node is None:
+            self.__tail = node
+            return
+        raise "Invalid value"
+
     def is_frozen(self) -> bool:
         return self.__frozen
 

@@ -5,9 +5,7 @@ from data_structures import Stack
 
 
 class RotationStack(Stack):
-    def __init__(
-        self, items: Iterable[Any] = None, freeze: bool = False
-    ) -> None:
+    def __init__(self, items: Iterable[Any] = None, freeze: bool = False) -> None:
         super().__init__(items, freeze)
 
     def rotate(self, times: int = 1, reverse: bool = False) -> None:
@@ -41,6 +39,4 @@ class RotationStack(Stack):
         node.prev = None
 
     def __repr__(self) -> str:
-        return (
-            f"RotationQueue({list(self)!r}, {self.__frozen!r})"
-        )
+        return f"RotationQueue({list(self)!r}, {self.__frozen!r})"
