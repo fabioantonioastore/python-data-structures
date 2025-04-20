@@ -9,7 +9,6 @@ class RotationQueue(Queue):
         self, items: Iterable[Any] = None, queue_size: int = 0, freeze: bool = False
     ) -> None:
         super().__init__(items, queue_size, freeze)
-        self.queue = super()
 
     def rotate(self, times: int = 1, reverse: bool = False) -> None:
         if self.is_frozen():

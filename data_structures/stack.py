@@ -1,15 +1,13 @@
 from typing import Any
 from collections.abc import Iterable
 
-from docutils.parsers.rst.directives import value_or
-
 from data_structures import Node
 
 
 class Stack(Iterable):
     def __init__(self, items: Iterable[Any] = None, freeze: bool = False) -> None:
-        self.__head = None
-        self.__tail = None
+        self.__top = None
+        self.__bottom = None
         self.__iter_stack = None
         self.__size = 0
         self.__frozen = False
@@ -22,27 +20,63 @@ class Stack(Iterable):
             self.freeze()
 
     @property
-    def head(self) -> Any:
-        if self.__head:
-            return self.__head.data
+    def top(self) -> Any:
+        if self.__top:
+            return self.__top.data
         return None
 
+    @top.setter
+    def top(self, value: Any) -> None:
+        if self.__top:
+            self.__top.data = value
+            return
+        raise "The stack is empty"
+
     @property
-    def tail(self) -> Any:
-        if self.__tail:
-            return self.__tail.data
+    def bottom(self) -> Any:
+        if self.__bottom:
+            return self.__bottom.data
         return None
+
+    @bottom.setter
+    def bottom(self, value: Any) -> None:
+        if self.__bottom:
+            self.__bottom.data = value
+            return
+        raise "The stack is empty"
+
+    @property
+    def top_node(self) -> Node:
+        return self.__top
+
+    @top_node.setter
+    def top_node(self, node: Node) -> None:
+        if isinstance(node, Node) or node is None:
+            self.__top = node
+            return
+        raise "Invalid value"
+
+    @property
+    def bottom_node(self) -> Node:
+        return self.__bottom
+
+    @bottom_node.setter
+    def bottom_node(self, node: Node) -> None:
+        if isinstance(node, Node) or node is None:
+            self.__bottom = node
+            return
+        raise "Invalid value"
 
     def freeze(self) -> None:
         self.__frozen = True
-        node = self.__head
+        node = self.__top
         while not node is None:
             node.freeze()
             node = node.next
 
     def unfreeze(self) -> None:
         self.__frozen = False
-        node = self.__head
+        node = self.__top
         while not node is None:
             node.unfreeze()
             node = node.next
@@ -56,13 +90,13 @@ class Stack(Iterable):
         node = Node(item)
         self.__size += 1
 
-        if self.__head is None:
-            self.__head = node
-            self.__tail = self.__head
+        if self.__top is None:
+            self.__top = node
+            self.__bottom = self.__top
             return
-        self.__head.prev = node
-        node.next = self.__head
-        self.__head = node
+        self.__top.prev = node
+        node.next = self.__top
+        self.__top = node
 
     def is_empty(self) -> bool:
         return len(self) == 0
@@ -73,24 +107,24 @@ class Stack(Iterable):
         if self.is_empty():
             raise Exception("The Stack is empty")
 
-        item = self.__head.data
+        item = self.__top.data
         self.__size -= 1
-        if self.__head is self.__tail:
-            self.__head = None
-            self.__tail = None
+        if self.__top is self.__bottom:
+            self.__top = None
+            self.__bottom = None
             return item
-        self.__head = self.__head.next
-        self.__head.prev = None
+        self.__top = self.__top.next
+        self.__top.prev = None
         return item
 
     def peek(self) -> Any:
         if self.is_empty():
             raise Exception("The Stack is empty")
 
-        return self.__head.data
+        return self.__top.data
 
     def __list__(self) -> list[Any]:
-        node = self.__head
+        node = self.__top
         items = []
         while not node is None:
             items.append(node.data)
@@ -100,22 +134,22 @@ class Stack(Iterable):
     def remove(self, item: Any) -> Any:
         if self.is_frozen():
             raise "Cannot change state of a frozen stack"
-        node = self.__head
+        node = self.__top
         while not node is None:
             if node.data == item:
                 data = node.data
                 self.__size -= 1
-                if self.__head is node and self.__head is self.__tail:
-                    self.__head = None
-                    self.__tail = None
+                if self.__top is node and self.__top is self.__bottom:
+                    self.__top = None
+                    self.__bottom = None
                     return data
-                if self.__head is node:
-                    self.__head = self.__head.next
-                    self.__head.prev = None
+                if self.__top is node:
+                    self.__top = self.__top.next
+                    self.__top.prev = None
                     return data
-                if self.__tail is node:
-                    self.__tail = self.__tail.prev
-                    self.__tail.next = None
+                if self.__bottom is node:
+                    self.__bottom = self.__bottom.prev
+                    self.__bottom.next = None
                     return data
                 node.prev.next = node.next
                 node.next.prev = node.prev
@@ -133,24 +167,24 @@ class Stack(Iterable):
         node = Node(item)
         self.__size += 1
         if index > len(self) - 2 or abs(index + 1) > len(self) - 2:
-            node.prev = self.__tail
-            self.__tail.next = node
-            self.__tail = node
+            node.prev = self.__bottom
+            self.__bottom.next = node
+            self.__bottom = node
             return
 
-        node_insert = self.__head
+        node_insert = self.__top
         while index >= 0:
             if index == 0:
-                if node_insert is self.__head:
-                    node.next = self.__head
-                    self.__head.prev = node
-                    self.__head = node
+                if node_insert is self.__top:
+                    node.next = self.__top
+                    self.__top.prev = node
+                    self.__top = node
                     return
-                if node_insert is self.__tail:
-                    node.next = self.__tail
-                    node.prev = self.__tail.prev
-                    self.__tail.prev.next = node
-                    self.__tail.prev = node
+                if node_insert is self.__bottom:
+                    node.next = self.__bottom
+                    node.prev = self.__bottom.prev
+                    self.__bottom.prev.next = node
+                    self.__bottom.prev = node
                     return
                 node.next = node_insert
                 node.prev = node_insert.prev
@@ -163,12 +197,12 @@ class Stack(Iterable):
     def clean(self) -> None:
         if self.is_frozen():
             raise "Cannot change state of a frozen stack"
-        self.__head = None
-        self.__tail = None
+        self.__top = None
+        self.__bottom = None
         self.__size = 0
 
     def gen(self):
-        node = self.__head
+        node = self.__top
         while not node is None:
             yield node.data
             node = node.next
@@ -178,7 +212,7 @@ class Stack(Iterable):
             index += len(self)
         if index >= len(self):
             raise IndexError("Index overflow")
-        node = self.__head
+        node = self.__top
         while not node is None:
             if index == 0:
                 return node.data
@@ -191,7 +225,7 @@ class Stack(Iterable):
         try:
             if index < 0:
                 index += len(self)
-            node = self.__head
+            node = self.__top
             while index >= 0:
                 if index == 0:
                     node.data = data
@@ -204,7 +238,7 @@ class Stack(Iterable):
     def __iter__(self) -> "Stack":
         if not self.__iter_stack:
             self.__iter_stack = Stack()
-        self.__iter_stack.push(self.__head)
+        self.__iter_stack.push(self.__top)
         return self
 
     def __next__(self) -> Any:
