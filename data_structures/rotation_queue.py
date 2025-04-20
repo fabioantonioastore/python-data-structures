@@ -42,4 +42,6 @@ class RotationQueue(Queue):
         node.prev = None
 
     def __repr__(self) -> str:
-        return f"RotationQueue({list(self)!r}, {self.__queue_size!r}, {self.__frozen!r})"
+        return (
+            f"RotationQueue({list(self)!r}, {self.__queue_size!r}, {self.__frozen!r})"
+        )
