@@ -5,14 +5,15 @@ from data_structures import Node
 
 
 class Stack(Iterable):
-    def __init__(self, *args) -> None:
+    def __init__(self, items: Iterable[Any] = None) -> None:
         self.__head = None
         self.__tail = None
         self.__iter_stack = None
         self.__size = 0
 
-        for arg in args:
-            self.push(arg)
+        if items:
+            for item in items:
+                self.push(item)
 
     @property
     def head(self) -> Any:
@@ -128,18 +129,22 @@ class Stack(Iterable):
             node_insert = node_insert.next
             index -= 1
 
+    def clean(self) -> None:
+        self.__head = None
+        self.__tail = None
+        self.__size = 0
+
     def __getitem__(self, index: int) -> Any:
-        try:
-            if index < 0:
-                index += len(self)
-            node = self.__head
-            while index >= 0:
-                if index == 0:
-                    return node.data
-                node = node.next
-                index -= 1
-        except Exception:
+        if index < 0:
+            index += len(self)
+        if index >= len(self):
             raise IndexError("Index overflow")
+        node = self.__head
+        while not node is None:
+            if index == 0:
+                return node.data
+            node = node.next
+            index -= 1
 
     def __setitem__(self, index, data) -> None:
         try:
@@ -170,7 +175,7 @@ class Stack(Iterable):
         return node.data
 
     def __repr__(self) -> str:
-        return "Stack()"
+        return f"Stack({list(self)!r})"
 
     def __len__(self) -> int:
         return self.__size

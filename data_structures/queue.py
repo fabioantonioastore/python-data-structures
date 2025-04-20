@@ -5,12 +5,16 @@ from data_structures import Node, Stack
 
 
 class Queue(Iterable):
-    def __init__(self, queue_size: int = 0) -> None:
+    def __init__(self, queue_size: int = 0, items: Iterable[Any] = None) -> None:
         self.queue_size = queue_size
-        self.__iter_queue = None
+        self.__iter_stack = None
         self.__first = None
         self.__last = None
         self.__size = 0
+
+        if items:
+            for item in items:
+                self.enqueue(item)
 
     @property
     def queue_size(self) -> int:
@@ -126,6 +130,11 @@ class Queue(Iterable):
             return False
         return len(self) == self.queue_size
 
+    def clean(self) -> None:
+        self.__first = None
+        self.__last = None
+        self.__size = 0
+
     def insert(self, index: int, item: Any) -> None:
         if index < 0:
             index += len(self)
@@ -184,17 +193,17 @@ class Queue(Iterable):
         raise "Error"
 
     def __iter__(self) -> 'Queue':
-        if not self.__iter_queue:
-            self.__iter_queue = Stack()
-        self.__iter_queue.push(self.__first)
+        if not self.__iter_stack:
+            self.__iter_stack = Stack()
+        self.__iter_stack.push(self.__first)
         return self
 
     def __next__(self) -> Any:
         node = self.__iter_queue.peek()
         if node is None:
-            self.__iter_queue.pop()
+            self.__iter_stack.pop()
             raise StopIteration
-        self.__iter_queue[0] = node.next
+        self.__iter_stack[0] = node.next
         return node.data
 
     def __list__(self) -> list[Any]:
@@ -209,4 +218,4 @@ class Queue(Iterable):
         return self.__size
 
     def __repr__(self) -> str:
-        return f"Queue()"
+        return f"Queue({list(self)!r})"
