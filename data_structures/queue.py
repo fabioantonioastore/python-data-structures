@@ -5,16 +5,20 @@ from data_structures import Node, Stack
 
 
 class Queue(Iterable):
-    def __init__(self, queue_size: int = 0, items: Iterable[Any] = None) -> None:
+    def __init__(self, queue_size: int = 0, items: Iterable[Any] = None, freeze: bool = False) -> None:
         self.queue_size = queue_size
         self.__iter_stack = None
         self.__first = None
         self.__last = None
         self.__size = 0
+        self.__frozen = False
 
         if items:
             for item in items:
                 self.enqueue(item)
+
+        if freeze:
+            self.freeze()
 
     @property
     def queue_size(self) -> int:
@@ -39,10 +43,29 @@ class Queue(Iterable):
             return self.__last.data
         return None
 
+    def freeze(self) -> None:
+        self.__frozen = True
+        node = self.__first
+        while not node is None:
+            node.freeze()
+            node = node.next
+
+    def unfreeze(self) -> None:
+        self.__frozen = False
+        node = self.__first
+        while not node is None:
+            node.unfreeze()
+            node = node.next
+
     def is_empty(self) -> bool:
         return len(self) == 0
 
+    def is_frozen(self) -> bool:
+        return self.__frozen
+
     def enqueue(self, item: Any) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen queue"
         node = Node(item)
         self.__size += 1
         if self.__first is None:
@@ -59,6 +82,8 @@ class Queue(Iterable):
         self.__last = node
 
     def dequeue(self) -> Any:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen queue"
         if self.is_empty():
             raise "The Queue is empty"
         self.__size -= 1
@@ -77,18 +102,24 @@ class Queue(Iterable):
         return self.__first.data
 
     def poll(self) -> Any:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen queue"
         try:
             return self.dequeue()
         except:
             return None
 
     def offer(self, item: Any) -> bool:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen queue"
         if self.is_full():
             return False
         self.enqueue(item)
         return True
 
     def remove(self, item: Any) -> Any:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen queue"
         if self.is_empty():
             return None
         if self.__first is self.__last:
@@ -131,11 +162,15 @@ class Queue(Iterable):
         return len(self) == self.queue_size
 
     def clean(self) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen queue"
         self.__first = None
         self.__last = None
         self.__size = 0
 
     def insert(self, index: int, item: Any) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen queue"
         if index < 0:
             index += len(self)
         if index >= len(self):
@@ -185,6 +220,8 @@ class Queue(Iterable):
         raise "Error"
 
     def __setitem__(self, index, item) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen queue"
         if index < 0:
             index += len(self)
         if index >= len(self):

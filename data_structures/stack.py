@@ -1,19 +1,25 @@
 from typing import Any
 from collections.abc import Iterable
 
+from docutils.parsers.rst.directives import value_or
+
 from data_structures import Node
 
 
 class Stack(Iterable):
-    def __init__(self, items: Iterable[Any] = None) -> None:
+    def __init__(self, items: Iterable[Any] = None, freeze: bool = False) -> None:
         self.__head = None
         self.__tail = None
         self.__iter_stack = None
         self.__size = 0
+        self.__frozen = False
 
         if items:
             for item in items:
                 self.push(item)
+
+        if freeze:
+            self.freeze()
 
     @property
     def head(self) -> Any:
@@ -27,7 +33,26 @@ class Stack(Iterable):
             return self.__tail.data
         return None
 
+    def freeze(self) -> None:
+        self.__frozen = True
+        node = self.__head
+        while not node is None:
+            node.freeze()
+            node = node.next
+
+    def unfreeze(self) -> None:
+        self.__frozen = False
+        node = self.__head
+        while not node is None:
+            node.unfreeze()
+            node = node.next
+
+    def is_frozen(self) -> bool:
+        return self.__frozen
+
     def push(self, item: Any) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen stack"
         node = Node(item)
         self.__size += 1
 
@@ -43,6 +68,8 @@ class Stack(Iterable):
         return len(self) == 0
 
     def pop(self) -> Any:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen stack"
         if self.is_empty():
             raise Exception("The Stack is empty")
 
@@ -71,6 +98,8 @@ class Stack(Iterable):
         return items
 
     def remove(self, item: Any) -> Any:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen stack"
         node = self.__head
         while not node is None:
             if node.data == item:
@@ -94,6 +123,8 @@ class Stack(Iterable):
             node = node.next
 
     def insert(self, index: int, item: Any) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen stack"
         if len(self) == 0:
             self.push(item)
             return
@@ -130,6 +161,8 @@ class Stack(Iterable):
             index -= 1
 
     def clean(self) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen stack"
         self.__head = None
         self.__tail = None
         self.__size = 0
@@ -153,6 +186,8 @@ class Stack(Iterable):
             index -= 1
 
     def __setitem__(self, index, data) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen stack"
         try:
             if index < 0:
                 index += len(self)

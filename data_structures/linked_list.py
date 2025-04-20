@@ -5,15 +5,19 @@ from data_structures import Node, Stack
 
 
 class LinkedList(Iterable):
-    def __init__(self, items: Iterable[Any] = None) -> None:
+    def __init__(self, items: Iterable[Any] = None, freeze: bool = False) -> None:
         self.__size = 0
         self.__head = None
         self.__tail = None
         self.__iter_stack = None
+        self.__frozen = False
 
         if items:
             for item in items:
                 self.add_last(item)
+
+        if freeze:
+            self.freeze()
 
     @property
     def head(self) -> Any:
@@ -23,7 +27,26 @@ class LinkedList(Iterable):
     def tail(self) -> Any:
         return self.__tail
 
+    def is_frozen(self) -> bool:
+        return self.__frozen
+
+    def freeze(self) -> None:
+        self.__frozen = True
+        node = self.__head
+        while not node is None:
+            node.freeze()
+            node = node.next
+
+    def unfreeze(self) -> None:
+        self.__frozen = False
+        node = self.__head
+        while not node is None:
+            node.unfreeze()
+            node = node.next
+
     def add_last(self, item: Any) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen list"
         node = Node(item)
         self.__size += 1
         if self.__head is None:
@@ -35,6 +58,8 @@ class LinkedList(Iterable):
         self.__tail = node
 
     def add_first(self, item: Any) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen list"
         node = Node(item)
         self.__size += 1
         if self.__head is None:
@@ -54,6 +79,8 @@ class LinkedList(Iterable):
         return False
 
     def pop_last(self) -> Any:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen list"
         if self.is_empty():
             raise "Empty list"
         self.__size -= 1
@@ -67,6 +94,8 @@ class LinkedList(Iterable):
         return data
 
     def pop_first(self) -> Any:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen list"
         if self.is_empty():
             raise "Empty list"
         self.__size -= 1
@@ -80,6 +109,8 @@ class LinkedList(Iterable):
         return data
 
     def remove(self, item: Any) -> Any:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen list"
         if self.is_empty():
             return None
         if self.__head is self.__tail:
@@ -106,6 +137,8 @@ class LinkedList(Iterable):
         return None
 
     def insert(self, index: int, item: Any) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen list"
         if index < 0:
             index += len(self)
         if index >= len(self):
@@ -138,6 +171,8 @@ class LinkedList(Iterable):
 
 
     def clean(self) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen list"
         self.__head = None
         self.__tail = None
         self.__size = 0
@@ -172,6 +207,8 @@ class LinkedList(Iterable):
             index -= 1
 
     def __setitem__(self, index: int, item: Any) -> None:
+        if self.is_frozen():
+            raise "Cannot change state of a frozen list"
         if index < 0:
             index += len(self)
         if index >= len(self):
