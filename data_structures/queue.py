@@ -5,7 +5,9 @@ from data_structures import Node, Stack
 
 
 class Queue(Iterable):
-    def __init__(self, queue_size: int = 0, items: Iterable[Any] = None, freeze: bool = False) -> None:
+    def __init__(
+        self, queue_size: int = 0, items: Iterable[Any] = None, freeze: bool = False
+    ) -> None:
         self.queue_size = queue_size
         self.__iter_stack = None
         self.__first = None
@@ -235,7 +237,7 @@ class Queue(Iterable):
             index -= 1
         raise "Error"
 
-    def __iter__(self) -> 'Queue':
+    def __iter__(self) -> "Queue":
         if not self.__iter_stack:
             self.__iter_stack = Stack()
         self.__iter_stack.push(self.__first)

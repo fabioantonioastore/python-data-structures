@@ -1,4 +1,4 @@
-from  collections.abc import Iterable
+from collections.abc import Iterable
 from typing import Any
 
 from data_structures import Node, Stack
@@ -169,7 +169,6 @@ class LinkedList(Iterable):
             index -= 1
         raise "Error"
 
-
     def clean(self) -> None:
         if self.is_frozen():
             raise "Cannot change state of a frozen list"
@@ -221,7 +220,7 @@ class LinkedList(Iterable):
             node = node.next
             index -= 1
 
-    def __iter__(self) -> 'LinkedList':
+    def __iter__(self) -> "LinkedList":
         if not self.__iter_stack:
             self.__iter_stack = Stack()
         self.__iter_stack.push(self.__head)

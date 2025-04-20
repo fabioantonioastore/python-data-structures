@@ -2,7 +2,9 @@ from typing import Any
 
 
 class Node:
-    def __init__(self, data: Any, next: "Node" = None, prev: "Node" = None, freeze: bool = False) -> None:
+    def __init__(
+        self, data: Any, next: "Node" = None, prev: "Node" = None, freeze: bool = False
+    ) -> None:
         self.__data = data
         self.__next = next
         self.__prev = prev
@@ -20,22 +22,22 @@ class Node:
         raise "Cannot change state of a frozen node"
 
     @property
-    def next(self) -> 'Node':
+    def next(self) -> "Node":
         return self.__next
 
     @next.setter
-    def next(self, node: 'Node' = None) -> None:
+    def next(self, node: "Node" = None) -> None:
         if not self.__frozen:
             self.__next = node
             return
         raise "Cannot change state of a frozen node"
 
     @property
-    def prev(self) -> 'Node':
+    def prev(self) -> "Node":
         return self.__prev
 
     @prev.setter
-    def prev(self, node: 'Node' = None) -> None:
+    def prev(self, node: "Node" = None) -> None:
         if not self.__frozen:
             self.__prev = node
             return
