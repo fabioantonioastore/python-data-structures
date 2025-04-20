@@ -6,7 +6,7 @@ from data_structures import Node, Stack
 
 class Queue(Iterable):
     def __init__(
-        self, queue_size: int = 0, items: Iterable[Any] = None, freeze: bool = False
+        self, items: Iterable[Any] = None, queue_size: int = 0, freeze: bool = False
     ) -> None:
         self.queue_size = queue_size
         self.__iter_stack = None
@@ -34,16 +34,52 @@ class Queue(Iterable):
         raise f"Invalid queue size value {size}"
 
     @property
+    def first_node(self) -> Node:
+        return self.__first
+
+    @property
+    def last_node(self) -> Node:
+        return self.__last
+
+    @property
     def first(self) -> Any:
         if self.__first:
             return self.__first.data
         return None
+
+    @first.setter
+    def first(self, value: Any) -> None:
+        if self.__first:
+            self.__first.data = value
+            return
+        raise "The queue is empty"
+
+    @first_node.setter
+    def first_node(self, node: Node = None) -> None:
+        if isinstance(node, Node) or node is None:
+            self.__first = node
+            return
+        raise "Invalid value"
 
     @property
     def last(self) -> Any:
         if self.__last:
             return self.__last.data
         return None
+
+    @last.setter
+    def last(self, value: Any) -> None:
+        if self.__last:
+            self.__last.data = value
+            return
+        raise "The queue is empty"
+
+    @last_node.setter
+    def last_node(self, node: Node = None) -> None:
+        if isinstance(node, Node) or node is None:
+            self.__last = node
+            return
+        raise "Invalid value"
 
     def freeze(self) -> None:
         self.__frozen = True
@@ -244,7 +280,7 @@ class Queue(Iterable):
         return self
 
     def __next__(self) -> Any:
-        node = self.__iter_queue.peek()
+        node = self.__iter_stack.peek()
         if node is None:
             self.__iter_stack.pop()
             raise StopIteration
