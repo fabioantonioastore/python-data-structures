@@ -134,6 +134,12 @@ class Stack(Iterable):
         self.__tail = None
         self.__size = 0
 
+    def gen(self):
+        node = self.__head
+        while not node is None:
+            yield node.data
+            node = node.next
+
     def __getitem__(self, index: int) -> Any:
         if index < 0:
             index += len(self)

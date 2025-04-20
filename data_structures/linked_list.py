@@ -145,6 +145,12 @@ class LinkedList(Iterable):
     def is_empty(self) -> bool:
         return len(self) == 0
 
+    def gen(self):
+        node = self.__head
+        while not node is None:
+            yield node.data
+            node = node.next
+
     def __list__(self) -> list[Any]:
         items_list = []
         node = self.__head

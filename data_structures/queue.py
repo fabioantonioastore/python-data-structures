@@ -165,6 +165,12 @@ class Queue(Iterable):
             index -= 1
         raise "Error"
 
+    def gen(self):
+        node = self.__first
+        while not node is None:
+            yield node.data
+            node = node.next
+
     def __getitem__(self, index: int) -> Any:
         if index < 0:
             index += len(self)
