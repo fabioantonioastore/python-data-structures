@@ -3,7 +3,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ninja-utilities"
+name = "ninja-utils"
 version = "0.1.1"
 authors = [
     {name = "Fabio Antonio Astore", email = "astore.a.fabio@gmail.com"}
