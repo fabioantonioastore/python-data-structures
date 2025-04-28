@@ -1,2 +1,1 @@
-# python-data-structures
-Python Data Structures Package
+pip install ninja-utils
