@@ -1,7 +1,7 @@
-from typing import Union, Sequence
+from typing import Sequence
 
 
-def gcd(*numbers: Union[int, float] | Sequence[int | float]):
+def gcd(*numbers: int | Sequence[int]) -> int:
     numbers_len = len(numbers)
     if numbers_len == 1 and isinstance(numbers[0], Sequence):
         numbers = numbers[0]
