@@ -5,7 +5,9 @@ from ninja_utils.data_structures import BiNode
 
 
 class Queue(Sequence, Iterable):
-    def __init__(self, max_size: int = 0, items: Sequence[Any] | Iterable[Any] = None) -> None:
+    def __init__(
+        self, max_size: int = 0, items: Sequence[Any] | Iterable[Any] = None
+    ) -> None:
         self.__first = None
         self.__last = None
         self.__size = 0
