@@ -34,6 +34,57 @@ class Stack(Sequence, Iterable):
     def is_empty(self) -> bool:
         return len(self) == 0
 
+    def insert(self, index: int, item: Any) -> None:
+        if index == 0:
+            self.push(item)
+        if index < 0:
+            index += len(self)
+        if index >= len(self):
+            node = self.__top
+            while node.next:
+                node = node.next
+            node.next = Node(item)
+            self.__size += 1
+            return
+        node = self.__top
+        while index != 1:
+            node = node.next
+            index -= 1
+        new_node = Node(index)
+        new_node.next = node.next
+        node.next = new_node
+        self.__size += 1
+
+    def remove(self, item: Any) -> Any:
+        node = self.__top
+        if node.data == item:
+            return self.pop()
+        while node:
+            if node.next and node.next.data == item:
+                remove_node = node.next
+                node.next = remove_node.next
+                self.__size -= 1
+                return remove_node.data
+            node = node.next
+        return None
+
+    def find(self, item: Any) -> bool:
+        node = self.__top
+        while node:
+            if node.data == item:
+                return True
+            node = node.next
+        return False
+
+    def count(self, item: Any) -> int:
+        total = 0
+        node = self.__top
+        while node:
+            if node.data == item:
+                total += 1
+            node = node.next
+        return total
+
     def __getitem__(self, index: int) -> Any:
         if index < 0:
             index += len(self)
