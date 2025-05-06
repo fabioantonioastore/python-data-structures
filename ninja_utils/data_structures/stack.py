@@ -5,12 +5,12 @@ from ninja_utils.data_structures import Node
 
 
 class Stack(Sequence, Iterable):
-    def __init__(self, data: Sequence[Any] | Iterable[Any] = None) -> None:
+    def __init__(self, items: Sequence[Any] | Iterable[Any] = None) -> None:
         self.__size = 0
         self.__top = None
 
-        if data:
-            for item in data:
+        if items:
+            for item in items:
                 self.push(item)
 
     def peek(self) -> Any:
