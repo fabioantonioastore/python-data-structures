@@ -6,13 +6,11 @@ from ninja_utils.data_structures import BiNode
 
 class Queue(Sequence, Iterable):
     def __init__(
-        self, max_size: int = 0, items: Sequence[Any] | Iterable[Any] = None
+        self, items: Sequence[Any] | Iterable[Any] = None
     ) -> None:
         self.__first = None
         self.__last = None
         self.__size = 0
-        self.max_size = max_size
-        self.wait_list = []
 
         if items:
             for item in items:
@@ -31,22 +29,11 @@ class Queue(Sequence, Iterable):
         node.prev = self.__last
         self.__last = node
 
-    def put(self, item: Any) -> None:
-        if self.is_full():
-            self.wait_list.append(item)
-            return
-        self.enqueue(item)
-
-    def __put(self) -> None:
-        if self.wait_list:
-            self.enqueue(self.wait_list.pop(0))
-
     def dequeue(self) -> Any:
         node = self.__first
         self.__first = self.__first.next
         self.__first.prev = None
         self.__size -= 1
-        self.__put()
         return node.data
 
     def front(self) -> Any:
@@ -54,11 +41,6 @@ class Queue(Sequence, Iterable):
 
     def rear(self) -> Any:
         return self.__last.data
-
-    def is_full(self) -> bool:
-        if self.max_size:
-            return len(self) == self.max_size
-        return False
 
     def is_empty(self) -> bool:
         return len(self) == 0
@@ -89,7 +71,6 @@ class Queue(Sequence, Iterable):
                 node.prev.next = node.next
                 node.next.prev = node.prev
                 self.__size -= 1
-                self.__put()
                 return node.data
             node = node.next
         return None
