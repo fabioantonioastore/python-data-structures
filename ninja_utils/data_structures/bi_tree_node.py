@@ -2,7 +2,9 @@ from typing import Any
 
 
 class BiTreeNode:
-    def __init__(self, data: Any, left: 'BiTreeNode' = None, right: 'BiTreeNode' = None) -> None:
+    def __init__(
+        self, data: Any, left: "BiTreeNode" = None, right: "BiTreeNode" = None
+    ) -> None:
         self.data = data
         self.left = left
         self.right = right

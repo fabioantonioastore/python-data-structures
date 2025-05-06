@@ -2,7 +2,13 @@ from typing import Any
 
 
 class TreeNode:
-    def __init__(self, data: Any, left: 'TreeNode' = None, right: 'TreeNode' = None, prev: 'TreeNode' = None) -> None:
+    def __init__(
+        self,
+        data: Any,
+        left: "TreeNode" = None,
+        right: "TreeNode" = None,
+        prev: "TreeNode" = None,
+    ) -> None:
         self.data = data
         self.left = left
         self.right = right

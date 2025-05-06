@@ -2,7 +2,7 @@ from typing import Any, Generator
 
 
 class MultidimensionalNode:
-    def __init__(self, data: Any, nodes: list['MultidimensionalNode'] = None) -> None:
+    def __init__(self, data: Any, nodes: list["MultidimensionalNode"] = None) -> None:
         self.data = data
         self.nodes = []
         if nodes:
@@ -12,10 +12,10 @@ class MultidimensionalNode:
         for node in self.nodes:
             yield node
 
-    def __getitem__(self, index: int) -> 'MultidimensionalNode':
+    def __getitem__(self, index: int) -> "MultidimensionalNode":
         return self.nodes[index]
 
-    def __setitem__(self, index: int, node: 'MultidimensionalNode') -> None:
+    def __setitem__(self, index: int, node: "MultidimensionalNode") -> None:
         self.nodes[index] = node
 
     def __len__(self) -> int:
