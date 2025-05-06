@@ -1,13 +1,11 @@
-from typing import Any
+from typing import Any, Generator
 from collections.abc import Iterable, Sequence
 
 from ninja_utils.data_structures import BiNode
 
 
 class Queue(Sequence, Iterable):
-    def __init__(
-        self, items: Sequence[Any] | Iterable[Any] = None
-    ) -> None:
+    def __init__(self, items: Sequence[Any] | Iterable[Any] = None) -> None:
         self.__first = None
         self.__last = None
         self.__size = 0
@@ -17,8 +15,6 @@ class Queue(Sequence, Iterable):
                 self.enqueue(item)
 
     def enqueue(self, item: Any) -> None:
-        if self.is_full():
-            raise "The queue is full"
         node = BiNode(item)
         self.__size += 1
         if self.__first is None:
@@ -76,8 +72,6 @@ class Queue(Sequence, Iterable):
         return None
 
     def insert(self, index: int, item: Any) -> None:
-        if self.is_full():
-            raise "The queue is full"
         if index == -1:
             self.enqueue(item)
             return
@@ -115,7 +109,7 @@ class Queue(Sequence, Iterable):
             index -= 1
         node.data = item
 
-    def __iter__(self) -> Any:
+    def __iter__(self) -> Generator[Any]:
         node = self.__first
         while node:
             yield node.data

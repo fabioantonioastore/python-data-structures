@@ -4,3 +4,4 @@ from ninja_utils.data_structures.bi_node import BiNode
 from ninja_utils.data_structures.tree_node import TreeNode
 from ninja_utils.data_structures.bi_tree_node import BiTreeNode
 from ninja_utils.data_structures.multidimensional_node import MultidimensionalNode
+from ninja_utils.data_structures.linked_list import LinkedList
